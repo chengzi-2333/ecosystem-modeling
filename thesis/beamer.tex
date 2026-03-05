@@ -1,0 +1,182 @@
+%!TEX program = xelatex
+
+\documentclass[aspectratio=169, compress]{ctexbeamer}
+
+\mode<presentation>{
+    \usetheme{Warsaw}
+}
+
+\usefonttheme[onlymath]{serif}
+
+\title{对种群动态的数学手段模式化分析方法建立暨对实际农作物生产场景预测分析}
+\author{马宜远}
+\institute{大连市第二十四中学}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{目录}
+    \tableofcontents
+\end{frame}
+
+\section{研究背景与意义}
+
+\begin{frame}{研究背景与意义}
+    现状
+    \begin{itemize}
+        \item 人口增长和耕地资源紧张
+        \item 亟需提高农作物产量
+    \end{itemize}
+    \vspace{1em}
+    \pause
+
+    已有知识（离散生态学模型）
+    \begin{itemize}
+        \item “J”形增长曲线
+        \item “S”形增长曲线
+    \end{itemize}
+    \pause
+    \strong{模型过于理想化且偏定性分析}
+    \strong{需进一步增加约束并量化}
+    \vspace{1em}
+\end{frame}
+
+\section{模型构建}
+
+\subsection{逻辑斯蒂增长模型}
+
+\begin{frame}{基础模型：逻辑斯蒂（Logistic）增长模型}
+    描述在资源有限、存在种内竞争条件下的种群增长规律.
+    \begin{block}{逻辑斯蒂方程}
+        \begin{equation} \label{eq:logistic}
+            N^{\hspace{1mm}\prime} = r N (1 - \frac{N}{K})
+        \end{equation}
+
+        其中$N$为种群数量，随时间$t$变化（省略自变量），$K$为环境容纳量，$r$为内禀增长率
+        （后文带下标符号同理，不再赘述）.
+
+        $r$是一个经验值，可由$r = \frac{ln R_0}{T}$给出.
+        $R_0$为世代繁殖倍数，$T$为世代时间.
+    \end{block}
+    方程\eqref{eq:logistic}为微分方程，等号左侧是$N$的导数.
+    方程\eqref{eq:logistic}的意思就是要找到一个函数$N(t)$，满足它的导数等于等号右侧的式子.后文同理.
+
+    实际上该方程的解$N(t)$的图像就是“S”形增长曲线.
+\end{frame}
+
+\begin{frame}{基础模型：逻辑斯蒂（Logistic）增长模型}
+    \begin{figure}[h]
+        \includegraphics{./figures/logistic.pdf}
+        \caption{逻辑斯蒂增长模型($N(0) = 25$, $r = 1$, $K = 100$)}
+    \end{figure}
+\end{frame}
+
+\subsection{洛特卡-沃尔泰勒竞争模型}
+
+\begin{frame}{加入种间竞争：洛特卡-沃尔泰勒（Lotka-Volterra）竞争模型}
+    在逻辑斯蒂增长模型前提下，描述两个竞争物种的种群动态.
+    \begin{block}{洛特卡-沃尔泰勒方程}
+        \begin{subequations}
+            \begin{align}
+                N_1^{\hspace{1mm}\prime} = r_1 N_1 (\frac{K_1 - N_1 - \alpha N_2}{K_1}) \\
+                N_2^{\hspace{1mm}\prime} = r_2 N_2 (\frac{K_2 - N_2 - \beta N_1}{K_2})
+            \end{align}
+        \end{subequations}
+
+        $\alpha$, $\beta$分别表示两个物种竞争时对于对方数量增长的抑制率（抑制程度）.
+    \end{block}
+    非线性微分方程组，难解！采用数值方法求数值解.
+\end{frame}
+
+\begin{frame}{加入种间竞争：洛特卡-沃尔泰勒（Lotka-Volterra）竞争模型}
+    \begin{figure}[h]
+        \includegraphics{./figures/lotka-volterra.pdf}
+        \caption{洛特卡-沃尔泰勒竞争模型($r_1 = r_2 = 1$, $K_1 = 100$, $K_2 = 150$, $\alpha = 2$, $\beta = 3$, $N_1(0) = 25$, $N_2(0) = 50$)}
+    \end{figure}
+\end{frame}
+
+\subsection{洛特卡-沃尔泰勒捕食模型}
+
+\begin{frame}{引入捕食关系：洛特卡-沃尔泰勒捕食模型}
+    描述物种间捕食关系.
+    \begin{block}{洛特卡-沃尔泰勒捕食模型I}
+        这里假设系统中只有生产者与食草动物.
+        \begin{equation}
+            V^{\hspace{1mm}\prime} = r_m (1 - \frac{V}{K}) - c_1 H (\frac{1 - e^{-d_1} V}{V})
+        \end{equation}
+        \begin{equation}
+            H^{\hspace{1mm}\prime} = a_2 + c_2 (1 - e^{d_2} V)
+        \end{equation}
+        其中，$V$, $H$分别代表生产者与食草动物种群的生物量
+        （限于篇幅，方程中各常数含义暂不解释）.
+    \end{block}
+    当$V$减少时，动物便不再能充分取食，
+    $c_1$便以$v_1 := 1 - e^{-d_1} V$的速率下降，
+    当$V \rightarrow 0$时，$v_1 \rightarrow 1$.
+    $d_1$为常数，决定下降率，同时也表示食草动物的取食效率.
+\end{frame}
+
+\begin{frame}{引入捕食关系：洛特卡-沃尔泰勒捕食模型}
+    \begin{block}{洛特卡-沃尔泰勒捕食模型II}
+        \begin{equation}
+            H^{\hspace{1mm}\prime} = a_2 + c_2 (1 - e^{d_2} V) - f P (\frac{1 - e^{-d_3} H}{H})
+        \end{equation}
+        \begin{equation}
+            P^{\hspace{1mm}\prime} = -a_3 + c_3 (1 - e^{d_4} H)
+        \end{equation}
+        其中引入$P$表示捕食者.
+    \end{block}
+\end{frame}
+
+\section{计算机模拟的实用价值}
+
+\begin{frame}{计算机模拟的实际应用价值}
+    我们认识到，数学模型虽然是对现实的简化，但它在农业生产中具有重要的应用价值：
+    \begin{itemize}
+        \item 预见性：帮助农户提前判断产量变化趋势
+        \item 优化性：通过算法优化，提高模型准确性
+        \item 普及性：降低专业知识门槛，让非农业专家也可使用专用工具指导生产
+    \end{itemize}
+\end{frame}
+
+\section{结论与展望}
+
+\begin{frame}{结论与展望}
+    结果
+    \begin{itemize}
+        \item 加深了对生态学模型的理解
+        \item 数学与计算机在农业生产中的巨大潜力
+    \end{itemize}
+    \vspace{1em}
+    \pause
+
+    局限性
+    \begin{itemize}
+        \item 空间分布
+        \item 长期进化
+        \item 人为干扰
+    \end{itemize}
+    \vspace{1em}
+    \pause
+
+    \strong{我们相信，随着科技的发展，数学模型与计算机模拟将成为智慧农业的重要工具，助力实现更高效、更可持续的农业生产.}
+\end{frame}
+
+\section{参与者名单}
+
+\begin{frame}{参与者}
+    以下为本项目的参与者，在此一并感谢他们为本项目作出的贡献（排名不分先后）
+    \begin{itemize}
+        \item 论文构思、初稿写作(Conceptualization \& Original Draft): 马宜远
+        \item 软件、数据分析、项目管理(Software \& Analysis \& Administration): 孙嘉俊
+        \item 指导、审核(Supervision \& Review): 王明哲
+        \item 调查研究(Investigation): 刘一杨，王俊皓
+        \item 提供资源(Resources): 杨熙，肖云迈，张桓睿，张宇航，王云飞，吕沐宸，杨羽晨，盖锦泽，刘悦，岳银轩，李承举
+    \end{itemize}
+\end{frame}
+
+\end{document}
