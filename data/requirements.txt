@@ -1,5 +1,4 @@
 ipykernel
-sympy
 scipy
 matplotlib
 scienceplots
