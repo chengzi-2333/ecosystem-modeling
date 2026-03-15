@@ -65,7 +65,6 @@
 \subsubsection{简述}
 皮埃尔-弗朗索瓦·韦吕勒（P.F.Verhulst, 1804-1849）于 1838 年提出
 \strong{Logistic 增长模型} \autocite{logistic_origin},
-对应方程称为 Logistic 方程,
 为描述资源有限环境下种群增长的最简单模型,
 也是多数生态学模型的基础.
 我们熟知的“S形增长曲线”即为该模型.
@@ -77,7 +76,6 @@
 \begin{equation} \label{eq:logistic}
     \boxed{\frac{\mathrm{d} N}{\mathrm{d} t} = r N (1 - \frac{N}{K}).}
 \end{equation}
-
 其中$N$为种群数量,$t$为时间,
 $K$为生物的\strong{环境容纳量(environmental capacity)},
 $r$为\strong{内禀增长率(innate rate of increase)}.
@@ -92,7 +90,10 @@ $r$为\strong{内禀增长率(innate rate of increase)}.
 \begin{equation*}
     N_t = \frac{K}{1 + (\frac{K}{N_0} - 1) e^{-r t}},
 \end{equation*}
-函数图像如图\ref{fig:logistic}所示.
+函数图像如图\ref{fig:logistic}所示,其中
+$N_0 = 3$, 
+$r = 1$, 
+$K = 100$.
 \newline
 
 \begin{figure}[h]
@@ -103,21 +104,22 @@ $r$为\strong{内禀增长率(innate rate of increase)}.
 \end{figure}
 
 Logistic 方程十分简洁,但未考虑种间影响.
-接下来,我们将在逻辑斯蒂增长模型的基础上,增加种间竞争的因素.
+接下来,我们将在 Logistic 增长模型的基础上,添加种间竞争的因素.
 
 \subsection{Lotka-Volterra 竞争模型}
 
 \subsubsection{简述}
-二十世纪 20-30 年代,艾尔弗雷德·洛特卡(Alfred Lotka, 1880-1949)
-独立提出了描述种间竞争的简单数学模型,即\strong{Lotka-Volterra 竞争模型},
+二十世纪二十年代,阿尔弗雷德·洛特卡(Alfred Lotka, 1880-1949)
+与维多·沃尔泰拉(Vito Volterra, 1860-1940)
+分别独立提出了描述种间竞争的简单数学模型,即\strong{Lotka-Volterra 竞争模型},
 为生态学中描述种间竞争的基本模型.
 
-\subsubsection{数学模型描述}
+\subsubsection{数学模型描述} \label{sec:models:lv-comp:desc}
 生物竞争的本质是对有限资源的争夺.
 考虑种群之间的生境重叠,
-可使用$\frac{N_j}{K_i}$描述第$j$种群对第$i$种群生境的占据作用.
+可使用$\frac{N_j}{K_i}$描述第$j$种群对第$i$种群生境的影响.
 
-考虑两个种群的竞争
+首先考虑两个种群的竞争
 \begin{subequations} \label{eq:lv-comp:part}
     \begin{align}
         \frac{\mathrm{d} N_1}{\mathrm{d} t} = r_1 N_1 (1 - \frac{N_1}{K_1} - \alpha_{1,2} \frac{N_2}{K_1}), \\
@@ -126,34 +128,29 @@ Logistic 方程十分简洁,但未考虑种间影响.
 \end{subequations}
 
 与方程\eqref{eq:logistic}相比,
-方程\eqref{eq:lv-comp:part}仅添加$\alpha_{i,j} \frac{N_j}{K_i}$一项（简称为“竞争项”）,
-其中$\alpha_{i,j}$为\strong{竞争系数(coefficient of competition)},
-描述\strong{第$j$种群对第$i$种群的竞争程度}.
+方程\eqref{eq:lv-comp:part}仅添加$\alpha_{i,j} \frac{N_j}{K_i}$一项（简称为“交互项”）,
+其中$\alpha_{i,j}$为\strong{交互系数(coefficient of interaction)},
+描述\strong{第$j$种群对第$i$种群的影响}.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\columnwidth]{./figures/lotka-volterra-competition.pdf}
-    \caption{Lotka-Volterra 竞争模型}
-    \label{fig:lv-comp}
-\end{figure}
-
-更一般地,若存在多个种群,则可叠加不同种群间的竞争项
+更一般地,若存在多个种群,则可叠加不同种群间的交互项
 \begin{equation} \label{eq:lv-comp}
     \boxed{\frac{\mathrm{d} N_i}{\mathrm{d} t} = r_i N_i (1 - \frac{1}{K_i} \sum_{j} \alpha_{i,j} N_j).}
 \end{equation}
 
 方程\eqref{eq:lv-comp}将 Logistic 方程\eqref{eq:logistic}中$\frac{N_i}{K_i}$一项并入求和,
-既是为了保持方程形式简洁,也为引入\strong{竞争系数的矩阵表示}提供方便.
+既是为了保持方程形式简洁,也为引入
+\strong{\ref{sec:models:lv-comp:inter-mat}交互矩阵}提供方便.
 
-\subsubsection{竞争系数的矩阵表示}
-如前文所述,竞争系数$\alpha_{i,j}$描述第$j$种群对第$i$种群的竞争程度.
+\subsubsection{交互矩阵} \label{sec:models:lv-comp:inter-mat}
+如前文所述,交互系数$\alpha_{i,j}$描述第$j$种群对第$i$种群的影响.
 注意到这里若要指定具体的$\alpha_{i,j}$,需要$i$, $j$两个值,
-若种群数量为$n$,则竞争系数共有$n^2$个.
-随种群数量$n$增长,大量系数若采用列表表示,将难以维护.
+若种群数量为$n$,则交互系数共有$n^2$个.
+随种群数量$n$增长,大量交互系数若采用列表表示,将难以维护.
 
-此时可以令$i$,$j$分别表示行索引与列索引,构造一个$n \times n$\strong{矩阵(matrix)}
+此时可以令$i$,$j$分别表示行索引与列索引,
+构造一个$n \times n$的二维“数表”,即\strong{交互矩阵(interaction matrix)}
 \begin{equation*}
-    \alpha := \begin{bmatrix}
+    \mathbf{\alpha} := \begin{bmatrix}
         \alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,j} & \cdots & \alpha_{1,n} \\
         \alpha_{2,1} & \alpha_{2,2} & \cdots & \alpha_{2,j} & \cdots & \alpha_{2,n} \\
         \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
@@ -162,55 +159,115 @@ Logistic 方程十分简洁,但未考虑种间影响.
         \alpha_{n,1} & \alpha_{n,2} & \cdots & \alpha_{n,j} & \cdots & \alpha_{n,n}
     \end{bmatrix},
 \end{equation*}
-如此便能方便地表示竞争系数.
+如此,交互系数便可以简单地使用符号$\mathbf{\alpha}$表示.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{./figures/lotka-volterra-competition.pdf}
+    \caption{Lotka-Volterra 竞争模型}
+    \label{fig:lv-comp}
+\end{figure}
+
+图\ref{fig:lv-comp}展示了当
+$\vec{N_0} = \left[ \begin{smallmatrix}
+    25 & 50
+\end{smallmatrix} \right]^\top$, 
+$\vec{r} = \left[ \begin{smallmatrix}
+    1 & 1
+\end{smallmatrix} \right]^\top$, 
+$\vec{K} = \left[ \begin{smallmatrix}
+    100 & 150
+\end{smallmatrix} \right]^\top$, 
+$\mathbf{\alpha} = \left[ \begin{smallmatrix}
+    1 & 2 \\
+    3 & 1
+\end{smallmatrix} \right]$
+时方程的解.
 \newline
 
 Lotka-Volterra 竞争模型描述了种间竞争关系.
 接下来,我们将进一步引入捕食关系.
 
 \subsection{Lotka-Volterra 捕食模型}
-% TODO: Lotka-Volterra predation
 
 \subsubsection{简述}
+\strong{Lotka-Volterra 捕食模型}经常用来描述生物系统中,
+掠食者与猎物进行互动时的动态过程,也就是两者族群规模的消长.
+同样地,该模型分别由阿弗雷德·洛特卡与维多·沃尔泰拉于 1925 年与 1926 年独立发表.
 
-\subsubsection{食草动物的引入}
-现在我们把食草动物引入这一模型,只需在原方程上额外增加一项,
-以表达受食草动物的啃食程度,因此方程可以写为
-\begin{equation}
-    \frac{\mathrm{d} V}{\mathrm{d} t} = r_m (1 - \frac{V}{K}) - c_1 H (\frac{1 - e^{-d_1} V}{V})
+\subsubsection{数学模型描述}
+首先考虑一对捕食者与猎物.
+考虑捕食者对猎物增长率的影响,
+可在猎物的增长率$r_1$上添加一项$-\beta_{1,2} N_2$,
+并设$\beta_{1,2} > 0$,有
+\begin{equation} \label{eq:lv-pred:part:1}
+    \frac{\mathrm{d} N_1}{\mathrm{d} t} = N_1 (r_1 - \beta_{1,2} N_2).
 \end{equation}
+我们暂时设$r_1 > 0$,这表示我们假设猎物在无捕食者的情况下($\beta_{1,2} = 0$)呈指数增长.
 
-其中,$H$代表食草动物种群的生物量,
-$c_1$代表食物充足情况下每个食草动物单位的最大食物摄取率.
-当$V$减少时,动物便不再能充分取食,
-$c_1$便以$v_1 := 1 - e^{-d_1} V$的速率下降,
-当$V \rightarrow 0$时,$v_1 \rightarrow 1$.
-$d_1$为常数,决定下降率,同时也表示食草动物的取食效率.
-可见,对食草动物来说,$c_1 v_1$就相当于捕食动物的功能反应,
-用以表示食草动物摄取率对食物量变化所发生的反应.
-可以推导食草动物种群的增长率
-\begin{equation}
-    \frac{\mathrm{d} H}{\mathrm{d} t} = a_2 + c_1 (1 - e^{d_1} V)
+对于捕食者,要添加$\beta_{2,1} N_1$一项,因为在食物充足情况下有助于其增长,
+于是有
+\begin{equation} \label{eq:lv-pred:part:2}
+    \frac{\mathrm{d} N_2}{\mathrm{d} t} = N_2 (-r_2 + \beta_{2,1} N_1).
 \end{equation}
+注意到此处$r_2$前为负号,这表示捕食者在食物缺乏情况下($\beta_{2,1} \rightarrow 0$),
+其种群数量有下降趋势.
 
-\subsubsection{食肉动物的引入}
-如果把捕食动物猎杀食草动物引入上述模型,模型就会变得更加复杂.
-其中的植物种群方程仍然保持不变,但描述食草动物增长的方程会因为加入
-食肉动物而变得复杂起来
-\begin{equation}
-    \frac{\mathrm{d} H}{\mathrm{d} t} = a_2 + c_2 (1 - e^{d_2} V) - f P (\frac{1 - e^{-d_3} H}{H})
+观察式\eqref{eq:lv-pred:part:1}与式\eqref{eq:lv-pred:part:2}的形式,
+发现系数前符号可并入常数$r$, $\beta$,于是可以写出一般形式
+\begin{equation*} \label{eq:lv-pred:part}
+    \frac{\mathrm{d} N_i}{\mathrm{d} t} = N_i (r_i + \beta_{i,j} N_j).
+\end{equation*}
+考虑多个捕食关系的影响,我们得到
+\begin{equation} \label{eq:lv-pred}
+    \boxed{\frac{\mathrm{d} N_i}{\mathrm{d} t} = N_i (r_i + \sum_{j} \beta_{i,j} N_j).}
 \end{equation}
+由于这里$\beta_{i,j}$同\ref{sec:models:lv-comp:desc}中的$\alpha_{i,j}$一样,
+均表示了\strong{种群间的交互关系},
+因此我们也将$\beta_{i,j}$称为\strong{交互系数},
+而且由于形式上的一致性,同样可以构建由$\beta_{i,j}$构成的\strong{交互矩阵}
+\begin{equation*}
+    \mathbf{\beta} := \begin{bmatrix}
+        \beta_{1,1} & \beta_{1,2} & \cdots & \beta_{1,j} & \cdots & \beta_{1,n} \\
+        \beta_{2,1} & \beta_{2,2} & \cdots & \beta_{2,j} & \cdots & \beta_{2,n} \\
+        \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
+        \beta_{i,1} & \beta_{i,2} & \cdots & \beta_{i,j} & \cdots & \beta_{i,n} \\
+        \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
+        \beta_{n,1} & \beta_{n,2} & \cdots & \beta_{n,j} & \cdots & \beta_{n,n}
+    \end{bmatrix}.
+\end{equation*}
 
-对于食肉动物,我们则采用一个新方程加以描述
-\begin{equation}
-    \frac{\mathrm{d} P}{\mathrm{d} t} = -a_3 + c_3 (1 - e^{d_4} H)
-\end{equation}
+% TODO: 解释交互矩阵对角线元素的含义
+% 特别指出,交互矩阵对角线上的元素$\beta_{i,i}$
 
-这样一个模型虽然仍然简陋,
-但已经可以对叶菜类农作物的产量做出初步的预测和较为准确的判断,
-尤其表现出了产量变化的逐步过程,这对于农业生产也是极其重要的.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{./figures/lotka-volterra-predation.pdf}
+    \caption{Lotka-Volterra 捕食模型}
+    \label{fig:lv-pred}
+\end{figure}
+图\ref{fig:lv-pred}便展示了
+$\vec{N_0} = \left[ \begin{smallmatrix}
+    60 & 20
+\end{smallmatrix} \right]^\top$, 
+$\vec{r} = \left[ \begin{smallmatrix}
+    0.07 & -0.1
+\end{smallmatrix} \right]^\top$, 
+$\vec{K} = \left[ \begin{smallmatrix}
+    100 & 150
+\end{smallmatrix} \right]^\top$, 
+$\mathbf{\beta} = \left[ \begin{smallmatrix}
+    0 & -0.001 \\
+    0.001 & 0
+\end{smallmatrix} \right]$
+时方程的解.
 
-\section{计算机模拟对实际应用的结合}
+\subsection{广义 Lotka-Volterra 模型}
+% TODO: 广义 LV 模型
+% TODO: 最终模型
+
+% TODO: 修改总结部分
+\section{计算机模拟与实际应用的结合}
 
 \subsection{数学与农田的对话}
 数学建模作为现实生活中的一个重要工具,
@@ -218,7 +275,7 @@ $d_1$为常数,决定下降率,同时也表示食草动物的取食效率.
 在理解种群动态的任务中,尤其是从理论模型到实际应用的场景,
 我们仍然面对诸多挑战.
 
-\subsection{计算机模拟结果对实际应用的作用}
+\subsection{计算机模拟与实际应用的作用}
 
 \subsubsection{预见性}
 原始的农业生产在有限的经验下,
