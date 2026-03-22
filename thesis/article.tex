@@ -13,8 +13,20 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{mathtools}
+\usepackage{cleveref}
 
 \pagestyle{fancy}
+
+\crefname{section}{章节}{章节}
+\creflabelformat{section}{\S#2#1#3~}
+\crefname{theorem}{定理}{定理}
+\crefname{lemma}{引理}{引理}
+\crefname{definition}{定义}{定义}
+\crefname{figure}{图}{图}
+\creflabelformat{figure}{#2#1#3~}
+\crefname{table}{表}{表}
+\crefname{algorithm}{算法}{算法}
+\crefname{equation}{方程}{方程}
 
 \addbibresource{reference.bib}
 
@@ -23,21 +35,22 @@
 \author{孙嘉俊}
 \author{王明哲 \thanks{通讯作者}}
 \renewcommand \Authands{,}
-\affil{大连第二十四中学}
+\affil{大连市第二十四中学}
 \date{}
 
 \begin{document}
 
 \twocolumn[
     \maketitle
-    \strong{摘要}：
+    \strong{摘要}:
     生态学在农业生产中常被用于预测农作物产量.
     本文使用计算机分析方法,
     就不同生态因素对叶菜类农作物产量影响进行建模,
-    得到了综合种内、种间竞争、天敌影响、土壤肥力等生态因素综合作用下的叶菜类农作物种群数量模型,
+    得到了在竞争、捕食等种间关系作用下的种群演化模型,
     最终得以精准预测、精准干预.
 
-    \strong{关键词}：农作物产量预测；计算机模拟；生态学模型
+    \strong{关键词}:
+    农作物产量预测; 计算机模拟; 生态学模型
 
     \vspace{1cm}
 ]
@@ -73,7 +86,8 @@
 \begin{equation} \label{eq:logistic}
     \boxed{\frac{\mathrm{d} x}{\mathrm{d} t} = r x (1 - \frac{x}{k}).}
 \end{equation}
-其中$x$可表示种群数量或种群密度,$t$为时间,
+其中$x$可表示种群数量或种群密度,
+$t$为时间,
 $k$为生物的\strong{环境容纳量(environmental capacity)},
 $r$为\strong{内禀增长率(innate rate of increase)}.
 内禀增长率$r$是一个经验数值,可由近似公式
@@ -83,13 +97,13 @@ $r$为\strong{内禀增长率(innate rate of increase)}.
 给出.
 其中$R_0$为净生殖率,即一个世代中种群的增长倍数,$T$为世代时间.
 
-式 \eqref{eq:logistic} 为一阶常微分方程,通解为
+\cref{eq:logistic}为一阶常微分方程,通解为
 \begin{equation*}
     x(t) = \frac{k}{1 + (\frac{k}{x_0} - 1) e^{-r t}},
 \end{equation*}
-函数图像如图\ref{fig:logistic}所示,其中
-$x_0 = 3$, 
-$r = 1$, 
+函数图像如\cref{fig:logistic}所示,其中
+$x_0 = 3$,
+$r = 1$,
 $k = 100$.
 \newline
 
@@ -103,7 +117,7 @@ $k = 100$.
 Logistic 方程十分简洁,但未考虑种间影响.
 接下来,我们将在 Logistic 增长模型的基础上,添加种间竞争的影响.
 
-\subsection{Lotka-Volterra 竞争模型}
+\subsection{Lotka-Volterra 竞争模型} \label{sec:models:lv-comp}
 二十世纪二十年代,阿尔弗雷德·洛特卡(Alfred Lotka, 1880-1949)
 与维多·沃尔泰拉(Vito Volterra, 1860-1940)
 分别独立提出了描述种间竞争的简单数学模型,即\strong{Lotka-Volterra 竞争模型},
@@ -122,8 +136,8 @@ Logistic 方程十分简洁,但未考虑种间影响.
     \end{align}
 \end{subequations}
 
-与式\eqref{eq:logistic}相比,
-式\eqref{eq:lv-comp:part}仅添加$\alpha_{i,j} \frac{x_j}{k_i}$一项(简称“交互项”),
+与\cref{eq:logistic}相比,
+\cref{eq:lv-comp:part}仅添加$\alpha_{i,j} \frac{x_j}{k_i}$一项(简称“交互项”),
 其中$\alpha_{i,j}$为\strong{交互系数(coefficient of interaction)},
 描述\strong{第$j$种群对第$i$种群的影响}.
 
@@ -132,9 +146,9 @@ Logistic 方程十分简洁,但未考虑种间影响.
     \boxed{\frac{\mathrm{d} x_i}{\mathrm{d} t} = r_i x_i (1 - \frac{1}{k_i} \sum_{j} \alpha_{i,j} x_j).}
 \end{equation}
 
-式\eqref{eq:lv-comp}将 Logistic 方程\eqref{eq:logistic}中$\frac{x_i}{k_i}$一项并入求和,
+\cref{eq:lv-comp}将 Logistic \cref{eq:logistic}中$\frac{x_i}{k_i}$一项并入求和,
 既是为了保持方程形式简洁,也为引入
-\strong{\ref{sec:models:lv-comp:inter-mat}交互矩阵}提供方便.
+\strong{\cref{sec:models:lv-comp:inter-mat}\nameref*{sec:models:lv-comp:inter-mat}}提供方便.
 
 \subsubsection{交互矩阵} \label{sec:models:lv-comp:inter-mat}
 如前文所述,交互系数$\alpha_{i,j}$描述第$j$种群对第$i$种群的影响.
@@ -145,7 +159,8 @@ Logistic 方程十分简洁,但未考虑种间影响.
 此时可以令$i$,$j$分别表示行索引与列索引,
 构造一个$n \times n$的二维“数表”,即\strong{交互矩阵(interaction matrix)}
 \begin{equation*}
-    \boldsymbol{\alpha} := \begin{bmatrix}
+    \boldsymbol{\alpha} :=
+    \begin{bmatrix}
         \alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,j} & \cdots & \alpha_{1,n} \\
         \alpha_{2,1} & \alpha_{2,2} & \cdots & \alpha_{2,j} & \cdots & \alpha_{2,n} \\
         \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
@@ -162,21 +177,23 @@ Logistic 方程十分简洁,但未考虑种间影响.
     \caption{Lotka-Volterra 竞争模型}
     \label{fig:lv-comp}
 \end{figure}
-图\ref{fig:lv-comp}展示了
-$\mathbf{x_0} = \langle 25, 50 \rangle$, 
-$\mathbf{r} = \langle 1, 1 \rangle$, 
-$\mathbf{k} = \langle 100, 150 \rangle$, 
-$\boldsymbol{\alpha} = \left[ \begin{smallmatrix}
-    1 & 2 \\
-    3 & 1
-\end{smallmatrix} \right]$
+\cref{fig:lv-comp}为
+$\mathbf{x_0} = \langle 25, 50 \rangle$,
+$\mathbf{r} = \langle 1, 1 \rangle$,
+$\mathbf{k} = \langle 100, 150 \rangle$,
+$\boldsymbol{\alpha} = \left[
+    \begin{smallmatrix}
+        1 & 2 \\
+        3 & 1
+    \end{smallmatrix}
+\right]$
 时方程的解.
 \newline
 
 Lotka-Volterra 竞争模型描述了种间竞争关系.
 接下来,我们将进一步引入捕食关系.
 
-\subsection{Lotka-Volterra 捕食模型}
+\subsection{Lotka-Volterra 捕食模型} \label{sec:models:lv-pred}
 \strong{Lotka-Volterra 捕食模型}经常用于描述生物系统中,
 掠食者与猎物进行互动时的动态过程,也就是两者族群规模的消长.
 同样地,该模型分别由阿弗雷德·洛特卡与维多·沃尔泰拉于 1925 年与 1926 年独立发表.
@@ -199,7 +216,7 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
 注意到此处$r_2$前为负号,这表示捕食者在食物匮乏情况下($\beta_{2,1} \rightarrow 0$),
 其种群数量有下降趋势.
 
-观察式\eqref{eq:lv-pred:part:1}与式\eqref{eq:lv-pred:part:2}的形式,
+观察\cref{eq:lv-pred:part:1}与\cref{eq:lv-pred:part:2}的形式,
 发现系数前符号可并入常数$r$, $\beta$,于是可以写出一般形式
 \begin{equation*} \label{eq:lv-pred:part}
     \frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (r_i + \beta_{i,j} x_j).
@@ -208,12 +225,13 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
 \begin{equation} \label{eq:lv-pred}
     \boxed{\frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (r_i + \sum_{j} \beta_{i,j} x_j).}
 \end{equation}
-由于式\eqref{eq:lv-pred}的$\beta_{i,j}$与\ref{sec:models:lv-comp:desc}中的$\alpha_{i,j}$一样,
+由于\cref{eq:lv-pred}的$\beta_{i,j}$与\cref{sec:models:lv-comp:desc}中的$\alpha_{i,j}$一样,
 均表示了\strong{种群间的交互关系},
 因此我们也将$\beta_{i,j}$称为\strong{交互系数},
 且由于形式的一致性,同样可以构建由$\beta_{i,j}$构成的\strong{交互矩阵}
 \begin{equation*}
-    \boldsymbol{\beta} := \begin{bmatrix}
+    \boldsymbol{\beta} :=
+    \begin{bmatrix}
         \beta_{1,1} & \beta_{1,2} & \cdots & \beta_{1,j} & \cdots & \beta_{1,n} \\
         \beta_{2,1} & \beta_{2,2} & \cdots & \beta_{2,j} & \cdots & \beta_{2,n} \\
         \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
@@ -224,7 +242,7 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
 \end{equation*}
 
 特别指出,交互矩阵的对角线元素$\beta_{i,i}$应满足$\beta_{i,i} \leq 0$,
-否则等式\eqref{eq:lv-pred}右侧将出现平方增长项$\beta_{i,i} x_i^2$,导致该种群无限增长.
+否则\cref{eq:lv-pred}右侧将出现平方增长项$\beta_{i,i} x_i^2$,导致该种群无限增长.
 
 \begin{figure}[h]
     \centering
@@ -232,47 +250,93 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
     \caption{Lotka-Volterra 捕食模型}
     \label{fig:lv-pred}
 \end{figure}
-图\ref{fig:lv-pred}便展示了
-$\mathbf{x_0} = \langle 60, 20 \rangle$, 
-$\mathbf{r} = \langle 0.07, -0.1 \rangle$, 
-$\mathbf{k} = \langle 100, 150 \rangle$, 
-$\boldsymbol{\beta} = \left[ \begin{smallmatrix}
-    0 & -0.001 \\
-    0.001 & 0
-\end{smallmatrix} \right]$
+\cref{fig:lv-pred}为
+$\mathbf{x_0} = \langle 60, 20 \rangle$,
+$\mathbf{r} = \langle 0.07, -0.1 \rangle$,
+$\boldsymbol{\beta} = \left[
+    \begin{smallmatrix}
+        0 & -0.001 \\
+        0.001 & 0
+    \end{smallmatrix}
+\right]$
 时方程的解.
 \newline
 
-在引入三种基本模型后,我们已具备构建通用模型的条件.
+在引入三种基本模型后,我们已初具构建通用模型的条件.
 下一节中,我们将进行一些收尾工作,整合三种基本模型的结论,
 最终给出通用模型的表达式.
 
-% TODO: 通用模型
-\subsection{通用模型}
+\subsection{通用模型} \label{sec:models:general}
 通用模型(\textbf{G}eneral \textbf{M}odel, \textbf{GM}),
 也可称为大统一模型(\textbf{G}rand unified \textbf{M}odel),
-由三种基本生态学模型导出,取特殊参数时可退化为三种基本模型.
-它是研究复杂生态系统演化的基础,在\ref{sec:example}实例分析中发挥重要作用.
+由三种基本生态学模型导出,取特定参数时可退化为三种基本模型.
+它是研究复杂生态系统演化的基础,
+在\cref{sec:example}\nameref*{sec:example}中发挥重要作用.
 
 在接下来的几节中,我们将基于三种基本模型,引入现实因素,逐步构建通用模型.
 
 \subsubsection{种间交互}
+观察\cref{sec:models:lv-comp}中的\cref{eq:lv-comp}
+以及\cref{sec:models:lv-pred}中的\cref{eq:lv-pred},
+发现可以将$(1 - \frac{1}{k_i} \sum_{j} \alpha_{i,j} x_j)$一项
+与$(r_i + \sum_{j} \beta_{i,j} x_j)$一项相乘,
+得到综合两种交互关系的增长系数
+\begin{equation*}
+    (1 - \frac{1}{k_i} \sum_{j} \alpha_{i,j} x_j)(r_i + \sum_{j} \beta_{i,j} x_j),
+\end{equation*}
+与$x_i$相乘,得到
+\begin{equation} \label{eq:general:part}
+    \frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (1 - \frac{1}{k_i} \sum_{j} \alpha_{i,j} x_j) (r_i + \sum_{j} \beta_{i,j} x_j).
+\end{equation}
+注意到\cref{eq:general:part}中$\frac{1}{k_i}$为常数,
+可移入求和符号,并入交互系数$\alpha_{i,j}$,以简化表达式,
+故\cref{eq:general:part}可写为
+\begin{equation}
+    \frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (1 - \sum_{j} \alpha_{i,j} x_j) (r_i + \sum_{j} \beta_{i,j} x_j).
+\end{equation}
 
-\subsubsection{周期性变化}
-在生态系统中,种群可能随环境演化呈周期性变化.
-例如季节变化.
+\subsubsection{周期性变化} \label{sec:models:general:freq}
+在生态系统中,种群可能随环境演化呈周期性变化,例如季节变化.
+为引入周期性变化,需要引入周期函数,如正弦型函数$a \sin(\omega t + \phi)$.
 
-\subsubsection{随机化}
+\subsubsection{随机化} \label{sec:models:general:random}
+周期性变化相对准确地描述了环境变化.
+然而,现实环境中存在大量不确定因素,可能导致难以预测的极端事件发生.
+确定性模型难以描述随机事件,因此需要引入\strong{随机变量}.
+
+考虑到极端事件与常见事件发生概率的差异,
+可引入常用的\strong{正态分布(normal distribution)}
+描述随机事件对种群的影响
+\begin{equation*}
+    X \sim N(\mu, \sigma^2),
+\end{equation*}
+其中$X$为随机变量,
+$\mu$为\strong{均值},表示随机变量\strong{取该值的概率最大};
+$\sigma$为\strong{标准差},描述随机变量取值\strong{偏离均值的程度},
+$\sigma$越大,随机变量越有可能取到极端值.
+上式的含义为随机变量$X$\strong{服从}参数为$(\mu, \sigma)$的正态分布.
+
+\cref{fig:norm-dist}为$X \sim N(0, 2)$的分布曲线.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{./figures/normal-distribution.pdf}
+    \caption{正态分布曲线}
+    \label{fig:norm-dist}
+\end{figure}
+
+\cref{fig:norm-dist}中可以看到,
+随机变量$X$的取值主要集中在$[\mu - 3 \sigma, \mu + 3 \sigma]$,
+仅有极小概率会超出$3 \sigma$范围,
+这为我们模拟极端事件的发生提供方便.
 
 \subsubsection{最终形式}
-基于上述分析,我们可以得到通用模型的最终形式
-\begin{equation}
+综合上述分析,我们可以得到通用模型的最终形式
+\begin{equation} \label{eq:general}
     \boxed{\boxed{\frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (1 - \sum_{j} \alpha_{i,j} x_j) (r_i + \sum_{j} \beta_{i,j} x_j) + f_i(t),}}
 \end{equation}
-或更为紧凑的矩阵形式
-\begin{equation}
-    \boxed{\boxed{\frac{\mathrm{d} \mathbf{x}}{\mathrm{d} t} = \mathbf{x} \circ (\mathbf{I} - \boldsymbol{\alpha} \mathbf{x}) \circ (\mathbf{r} + \boldsymbol{\beta} \mathbf{x}) + \mathbf{f}.}}
-\end{equation}
+其中$f_i(t)$为\cref{sec:models:general:freq}中周期函数
+与\cref{sec:models:general:random}中随机变量的加和.
 
 \begin{figure}[h]
     \centering
@@ -280,30 +344,45 @@ $\boldsymbol{\beta} = \left[ \begin{smallmatrix}
     \caption{通用模型}
     \label{fig:general}
 \end{figure}
-图\ref{fig:general}展示了
-$\mathbf{x_0} = \langle 60, 20 \rangle$, 
-$\mathbf{r} = \langle 0.1, -0.1 \rangle$, 
-$\mathbf{k} = \langle 100, 150 \rangle$, 
-$\boldsymbol{\alpha} = \left[ \begin{smallmatrix}
-    1 & 2 \\
-    3 & 1
-\end{smallmatrix} \right]$, 
-$\boldsymbol{\beta} = \left[ \begin{smallmatrix}
-    0 & -0.001 \\
-    0.001 & 0
-\end{smallmatrix} \right]$
+\cref{fig:general}为
+$\mathbf{x_0} = \langle 60, 20 \rangle$,
+$\mathbf{r} = \langle 0.09, -0.1 \rangle$,
+$\boldsymbol{\alpha} = \left[
+    \begin{smallmatrix}
+        0.01 & 0.02 \\
+        0.02 & 0.007
+    \end{smallmatrix}
+\right]$,
+$\boldsymbol{\beta} = \left[
+    \begin{smallmatrix}
+        0 & -0.001 \\
+        0.001 & 0
+    \end{smallmatrix}
+\right]$,
+$X \sim N(0, 3^2)$
 时方程的解.
+可以看到,
+$x_1$与$x_2$大致稳定在$40$与$30$,且具有随机波动,
+较为准确地刻画了现实中生态系统的种群变化.
 
-% TODO: 实例分析部分
+% TODO: 实例分析
 \section{实例分析} \label{sec:example}
+本章节中,我们将基于通用模型,结合两个具体实例进行分析.
+
+\subsection{稻蟹共生} \label{sec:example:rice-crab}
+稻蟹共生是一种将水稻种植与河蟹养殖相结合的生态农业模式,
+通过生物间的互利关系,实现生态效益与经济效益的双赢.
+在此生态系统中,我们引入杂草、水稻、害虫等,
+形成如下图所示的食物网
 
 % TODO: 修改总结部分
 \section{结论与展望}
 
 \subsection{数学与农田的对话}
 数学建模作为现实生活中的重要工具,
-使用简洁的语言描述事物的变化.
-在理解种群动态的任务中,尤其是从理论模型到实际应用的场景,
+使用简洁的语言描述事物及其演化.
+在作物产量的任务中,
+尤其是从理论模型到实际应用的场景,
 我们仍然面临诸多挑战.
 
 \subsection{计算机模拟与实际应用的作用}
@@ -327,38 +406,21 @@ $\boldsymbol{\beta} = \left[ \begin{smallmatrix}
 理想情况下,每一个农民都要掌握一定的气象、经济学知识,
 能准确解读天气数据,能优化资源配置,但现实不是这样的.
 计算机模拟在降低专业知识应用门槛方面可以发挥独特作用.
-农民不必理解模型内部的微分方程,不必掌握编程技能就能获得准确可靠的数据.
+农民不必理解模型的内部细节,不必掌握编程技能就能获得准确可靠的数据.
 
 \subsubsection{总结}
 数学建模与计算机模拟的价值,终究要由实践来检验.
 在这个意义上,模型永远只是模型——是对现实的简化与近似.
 但这种简化如果得当,
 就能帮助我们从复杂中识别简单,从噪声中辨别信号,从不确定性中锚定决策.
-这或许正是“对种群动态的数学手段模式化分析”对农作物生产场景的最根本贡献.
+这或许正是“对种群动态的数学手段模式化分析”对类似稻蟹共生场景的最根本贡献.
 当然了,我们也要看到研究的局限性.
 从空间的角度看,如在 LV 竞争模型中,如果我们拥有一个更加广阔的充足空间,
 就需要考虑到种群的空间分布对于其数量变化的影响.
 例如大型食肉动物对小型动物的威慑作用.
-从时间的角度看,因其还不具备引入长期复杂现实因素的能力,
-可能在更加广阔的时间尺度上略显逊色.
-例如将时间线拉长,我们可能要考虑到进化、演替等因素,
-以及基因的变异、自然选择等等.
-短期内这些因素不会对模拟结果造成太大影响,
-但是当时间线拉长,它们对于预测结果的影响程度成指数级增加,
-成为我们不能忽略不计的因素.
 从社会的角度看,计算机模拟的能力仍然不足.
-从人类影响的程度上看,就本研究的例子而言,当我们进一步思考实际意义,
-我们需要考虑到人工对害虫的扑杀等因素.
-人类对自然的影响是丰富的,不仅仅体现在程度上,更体现在形式上.
-每一个人的细微举动都会对自然造成影响,
-当人流量增大,如在考虑人口增长或是城市中公园的生态问题时,
-这些影响也是不可忽略的因素.
-而计算机如何体现各种各样形式的影响成为了我们面对此类问题时的主要挑战.
-数学建模与计算机模拟的价值,终究要由实践来检验.
-在这个意义上,模型永远只是模型——是对现实的简化与近似.
-但这种简化如果得当,
-就能帮助我们从复杂中识别简单,从噪声中辨别信号,从不确定性中锚定决策.
-这或许正是“对种群动态的数学手段模式化分析”对农作物生产场景的最根本贡献.
+例如从人类影响的程度上看,就本研究的例子而言,当我们进一步思考实际意义,
+我们需要考虑到人工对害虫的扑杀和人工施肥等因素.
 我们相信在不远的将来,
 计算机技术可以成熟的被运用到实际生产生活当中,让人类的生活更加美好.
 
