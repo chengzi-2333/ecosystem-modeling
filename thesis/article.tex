@@ -9,11 +9,11 @@
 \usepackage[scale=0.8]{geometry}
 % content
 \usepackage{authblk}
-\usepackage{biblatex}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{mathtools}
 \usepackage{cleveref}
+\usepackage[sorting=none]{biblatex}
 
 \pagestyle{fancy}
 
@@ -43,14 +43,13 @@
 \twocolumn[
     \maketitle
     \strong{摘要}:
-    生态学在农业生产中常被用于预测农作物产量.
-    本文使用计算机分析方法,
-    就不同生态因素对叶菜类农作物产量影响进行建模,
-    得到了在竞争、捕食等种间关系作用下的种群演化模型,
-    最终得以精准预测、精准干预.
+    生态学模型在农业生产中常被用于农作物产量预测.
+    本文就不同生态因素对农田生态系统进行建模,
+    得到了在竞争、捕食等种间关系及环境因素作用下的种群演化模型,
+    并使用计算机分析方法进行预测.
 
     \strong{关键词}:
-    农作物产量预测; 计算机模拟; 生态学模型
+    农作物产量预测; 计算机分析; 生态学模型
 
     \vspace{1cm}
 ]
@@ -70,11 +69,11 @@
 考虑农业经济效益影响,我们对农田生态系统进行建模,
 并结合现实环境因素进行分析.
 
-\section{常见生态学模型}
+\section{基本生态学模型与通用模型}
 
 \subsection{Logistic 增长模型}
 皮埃尔-弗朗索瓦·韦吕勒（P.F.Verhulst, 1804-1849）于 1838 年提出
-\strong{Logistic 增长模型} \autocite{logistic_origin},
+\strong{Logistic 增长模型}\autocite{verhulst-population},
 为描述资源有限环境下种群增长的最简单模型,
 也是多数生态学模型的基础.
 我们熟知的“S形增长曲线”即为该模型.
@@ -89,13 +88,14 @@
 其中$x$可表示种群数量或种群密度,
 $t$为时间,
 $k$为生物的\strong{环境容纳量(environmental capacity)},
-$r$为\strong{内禀增长率(innate rate of increase)}.
+$r$为\strong{内禀增长率(innate rate of increase)}\autocite{lotka-biologiques}.
 内禀增长率$r$是一个经验数值,可由近似公式
 \begin{equation*}
     r = \frac{\ln R_0}{T}
 \end{equation*}
 给出.
-其中$R_0$为净生殖率,即一个世代中种群的增长倍数,$T$为世代时间.
+其中$R_0$为净生殖率,即一个世代中种群的增长倍数,
+$T$为世代时间.
 
 \cref{eq:logistic}为一阶常微分方程,通解为
 \begin{equation*}
@@ -118,13 +118,12 @@ Logistic 方程十分简洁,但未考虑种间影响.
 接下来,我们将在 Logistic 增长模型的基础上,添加种间竞争的影响.
 
 \subsection{Lotka-Volterra 竞争模型} \label{sec:models:lv-comp}
-二十世纪二十年代,阿尔弗雷德·洛特卡(Alfred Lotka, 1880-1949)
+二十世纪二三十年代,阿尔弗雷德·洛特卡(Alfred Lotka, 1880-1949)
 与维多·沃尔泰拉(Vito Volterra, 1860-1940)
-分别独立提出了描述种间竞争的简单数学模型,即\strong{Lotka-Volterra 竞争模型},
+分别独立提出了描述种间竞争的简单数学模型,即\strong{Lotka-Volterra 竞争模型}\autocite{primer-eco},
 为生态学中描述种间竞争的基本模型.
 
 \subsubsection{数学模型描述} \label{sec:models:lv-comp:desc}
-生物竞争的本质是对有限资源的争夺.
 考虑种群之间的生境重叠,
 可使用$\frac{x_j}{k_i}$描述第$j$种群对第$i$种群生境的影响.
 
@@ -138,7 +137,7 @@ Logistic 方程十分简洁,但未考虑种间影响.
 
 与\cref{eq:logistic}相比,
 \cref{eq:lv-comp:part}仅添加$\alpha_{i,j} \frac{x_j}{k_i}$一项(简称“交互项”),
-其中$\alpha_{i,j}$为\strong{交互系数(coefficient of interaction)},
+其中$\alpha_{i,j}$为\strong{交互系数(interaction coefficient)},
 描述\strong{第$j$种群对第$i$种群的影响}.
 
 更一般地,若存在多个种群,则可叠加不同种群间的交互项
@@ -196,7 +195,9 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
 \subsection{Lotka-Volterra 捕食模型} \label{sec:models:lv-pred}
 \strong{Lotka-Volterra 捕食模型}经常用于描述生物系统中,
 掠食者与猎物进行互动时的动态过程,也就是两者族群规模的消长.
-同样地,该模型分别由阿弗雷德·洛特卡与维多·沃尔泰拉于 1925 年与 1926 年独立发表.
+同样地,该模型分别由阿弗雷德·洛特卡与维多·沃尔泰拉
+于 1925 年\autocite{lotka-elements}
+与 1926 年\autocite{volterra-variazioni}发表.
 
 \subsubsection{数学模型描述}
 首先考虑一对捕食者与猎物.
@@ -242,7 +243,7 @@ Lotka-Volterra 竞争模型描述了种间竞争关系.
 \end{equation*}
 
 特别指出,交互矩阵的对角线元素$\beta_{i,i}$应满足$\beta_{i,i} \leq 0$,
-否则\cref{eq:lv-pred}右侧将出现平方增长项$\beta_{i,i} x_i^2$,导致该种群无限增长.
+否则\cref{eq:lv-pred}右侧将出现平方增长项$\beta_{i,i} x_i^2$,导致种群无限增长.
 
 \begin{figure}[h]
     \centering
@@ -296,8 +297,13 @@ $\boldsymbol{\beta} = \left[
 \end{equation}
 
 \subsubsection{周期性变化} \label{sec:models:general:freq}
-在生态系统中,种群可能随环境演化呈周期性变化,例如季节变化.
-为引入周期性变化,需要引入周期函数,如正弦型函数$a \sin(\omega t + \phi)$.
+在生态系统中,种群可能随环境演化呈周期性变化.
+例如季节变化会影响生物的繁殖期,进而影响其内禀增长率.
+为刻画周期性变化,需要引入周期函数,如正弦型函数
+\begin{equation*}
+    a \sin(\omega t + \phi).
+\end{equation*}
+式中的参数$a$, $\omega$, $\phi$应根据实际情况取值.
 
 \subsubsection{随机化} \label{sec:models:general:random}
 周期性变化相对准确地描述了环境变化.
@@ -316,19 +322,15 @@ $\sigma$为\strong{标准差},描述随机变量取值\strong{偏离均值的程
 $\sigma$越大,随机变量越有可能取到极端值.
 上式的含义为随机变量$X$\strong{服从}参数为$(\mu, \sigma)$的正态分布.
 
-\cref{fig:norm-dist}为$X \sim N(0, 2)$的分布曲线.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{./figures/normal-distribution.pdf}
     \caption{正态分布曲线}
     \label{fig:norm-dist}
 \end{figure}
-
-\cref{fig:norm-dist}中可以看到,
+\cref{fig:norm-dist}为$X \sim N(0, 2)$的分布曲线.可以看到,
 随机变量$X$的取值主要集中在$[\mu - 3 \sigma, \mu + 3 \sigma]$,
-仅有极小概率会超出$3 \sigma$范围,
-这为我们模拟极端事件的发生提供方便.
+仅有极小概率会超出$3 \sigma$范围,这为模拟极端事件的发生提供便利.
 
 \subsubsection{最终形式}
 综合上述分析,我们可以得到通用模型的最终形式
@@ -367,60 +369,91 @@ $x_1$与$x_2$大致稳定在$40$与$30$,且具有随机波动,
 
 % TODO: 实例分析
 \section{实例分析} \label{sec:example}
-本章节中,我们将基于通用模型,结合两个具体实例进行分析.
+本章节中,我们将基于通用模型,结合具体实例进行分析.
 
 \subsection{稻蟹共生} \label{sec:example:rice-crab}
 稻蟹共生是一种将水稻种植与河蟹养殖相结合的生态农业模式,
 通过生物间的互利关系,实现生态效益与经济效益的双赢.
-在此生态系统中,我们引入杂草、水稻、害虫等,
-形成如下图所示的食物网
 
-% TODO: 修改总结部分
+在共养条件下,水稻为蟹提供庇护,改善水生环境,
+而蟹则消灭害虫和杂草,减少对化肥和农药的需求,稳定水稻产量.
+同时,稻蟹共生有助于保护生物多样性,减少温室气体排放.
+最终,稻蟹共养可以高度整合,利用最少的资源,同时提供最大的经济和环境效益
+\autocite{rice-crab-30-years}.
+
+本节将以稻蟹共生为例,使用通用模型预测种群演化.
+
+\subsubsection{模型构建}
+在本例中,我们引入杂草、水稻、蟹、害虫、鸟类(蟹的天敌),
+分别表示为$x_1$到$x_5$,组成生态系统.
+其中,蟹捕食杂草与害虫,害虫啃食水稻,而鸟类捕食蟹.
+
+% TODO: 修改结语部分
 \section{结论与展望}
 
-\subsection{数学与农田的对话}
+\subsection{结论}
+基于\cref{sec:example}\nameref*{sec:example}的结果,
+我们认为通用模型具有一定准确性
+
+\subsubsection{局限性}
+与此同时,通用模型存在局限性.
+\begin{itemize}
+    \item \strong{未考虑人为因素}\space
+        对于农田生态系统,人是该生态系统中极为重要的一环,
+        人对该生态系统的介入
+    \item \strong{强线性关系}\space
+        模型中令$\alpha_{i,j}$与$x_i$相乘并求和,
+    \item \strong{未体现长期影响}\space
+        在模型的假设中,内禀增长率与交互系数为常数.
+        这种假设在短期内不会出现太大偏差.
+        然而,长期影响下的种间关系可能会发生变化,
+        从而导致交互系数改变.
+\end{itemize}
+
+\subsection{展望}
 数学建模作为现实生活中的重要工具,
 使用简洁的语言描述事物及其演化.
 在作物产量的任务中,
 尤其是从理论模型到实际应用的场景,
 我们仍然面临诸多挑战.
 
-\subsection{计算机模拟与实际应用的作用}
+\begin{itemize}
+    \item \strong{预见性}\space
+        原始的农业生产在有限的经验下,
+        需要克服不确定的气候、资源等因素,才能提升产量.
+        计算机的模拟可以使经验判断成为定量计算.
+        值得注意的是,这种预见性并不要求模型的绝对准确.
+        复杂计算机模型的校准需要明确处理结构的误差——意识到模型只是对现实的近似,
+        结果本身包含一定误差,这对决策者而言也是非常重要的信息.
 
-\subsubsection{预见性}
-原始的农业生产在有限的经验下,
-需要克服不确定的气候、资源等因素,才能提升产量.
-计算机的模拟可以使经验判断成为定量计算.
-值得注意的是,这种预见性并不要求模型的绝对准确.
-复杂计算机模型的校准需要明确处理结构的误差——意识到模型只是对现实的近似,
-结果本身包含一定误差,这对决策者而言也是非常重要的信息.
+    \item \strong{优化性}\space
+        如上文所述,模型只是对现实的近似.
+        显而易见,模型越逼近现实,其实用价值越高.
+        计算机模拟与优化算法的结合,为解决这类问题提供了可行路径.
+        优化算法可以自我改进深度优化算法,探索许多人类无法察觉的微小因素,
+        从而做出更加精准的判断.
 
-\subsubsection{优化性}
-如上文所述,模型只是对现实的近似.
-显而易见,模型越逼近现实,其实用价值越高.
-计算机模拟与优化算法的结合,为解决这类问题提供了可行路径.
-优化算法可以自我改进深度优化算法,探索许多人类无法察觉的微小因素,
-从而做出更加精准的判断.
+    \item \strong{普及性}\space
+        理想情况下,每一个农民都要掌握一定的气象、经济学知识,
+        能准确解读天气数据,能优化资源配置,但现实不是这样的.
+        计算机模拟在降低专业知识应用门槛方面可以发挥独特作用.
+        农民不必理解模型的内部细节,不必掌握编程技能就能获得准确可靠的数据.
+\end{itemize}
 
-\subsubsection{普及性}
-理想情况下,每一个农民都要掌握一定的气象、经济学知识,
-能准确解读天气数据,能优化资源配置,但现实不是这样的.
-计算机模拟在降低专业知识应用门槛方面可以发挥独特作用.
-农民不必理解模型的内部细节,不必掌握编程技能就能获得准确可靠的数据.
-
-\subsubsection{总结}
-数学建模与计算机模拟的价值,终究要由实践来检验.
-在这个意义上,模型永远只是模型——是对现实的简化与近似.
+模型仅是对现实的简化与近似,终究需由实践检验.
 但这种简化如果得当,
 就能帮助我们从复杂中识别简单,从噪声中辨别信号,从不确定性中锚定决策.
 这或许正是“对种群动态的数学手段模式化分析”对类似稻蟹共生场景的最根本贡献.
-当然了,我们也要看到研究的局限性.
+
+当然,我们也要看到研究的局限性.
 从空间的角度看,如在 LV 竞争模型中,如果我们拥有一个更加广阔的充足空间,
 就需要考虑到种群的空间分布对于其数量变化的影响.
 例如大型食肉动物对小型动物的威慑作用.
+
 从社会的角度看,计算机模拟的能力仍然不足.
 例如从人类影响的程度上看,就本研究的例子而言,当我们进一步思考实际意义,
 我们需要考虑到人工对害虫的扑杀和人工施肥等因素.
+
 我们相信在不远的将来,
 计算机技术可以成熟的被运用到实际生产生活当中,让人类的生活更加美好.
 
