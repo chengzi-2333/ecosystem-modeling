@@ -108,7 +108,6 @@
             \centering
             \includegraphics[width=\columnwidth]{./figures/lotka-volterra-competition.pdf}
             \caption{
-                $\mathbf{x_0} = \langle 25, 50 \rangle$,
                 $\mathbf{r} = \langle 1, 1 \rangle$,
                 $\mathbf{k} = \langle 100, 150 \rangle$,
                 $\boldsymbol{\alpha} = \left[
@@ -146,14 +145,13 @@
             \centering
             \includegraphics[width=\columnwidth]{./figures/lotka-volterra-predation.pdf}
             \caption{
-                $\mathbf{x_0} = \langle 60, 20 \rangle$,
                 $\mathbf{r} = \langle 0.07, -0.1 \rangle$,
                 $\boldsymbol{\beta} = \left[
                     \begin{smallmatrix}
-                        0 & -0.001 \\
-                        0.001 & 0
+                        0 & -1 \\
+                        1 & 0
                     \end{smallmatrix}
-                \right]$
+                \right] \cdot 10^{-3}$
             }
             \label{fig:lv-pred}
         \end{figure}
@@ -179,20 +177,18 @@
             \centering
             \includegraphics[width=\columnwidth]{./figures/general.pdf}
             \caption{
-                $\mathbf{x_0} = \langle 60, 20 \rangle$,
-                $\mathbf{r} = \langle 0.09, -0.1 \rangle$,
                 $\boldsymbol{\alpha} = \left[
                     \begin{smallmatrix}
-                        0.01 & 0.02 \\
-                        0.02 & 0.007
+                        1 & 2 \\
+                        2 & 0.7
                     \end{smallmatrix}
-                \right]$,
+                \right] \cdot 10^{-2}$,
                 $\boldsymbol{\beta} = \left[
                     \begin{smallmatrix}
-                        0 & -0.001 \\
-                        0.001 & 0
+                        0 & -1 \\
+                        1 & 0
                     \end{smallmatrix}
-                \right]$
+                \right] \cdot 10^{-3}$
             }
             \label{fig:general}
         \end{figure}
@@ -212,19 +208,45 @@
         \column{0.5\textwidth}
         生态系统组成
         \begin{itemize}
-            \item 杂草 $x_1$, 与水稻竞争
-            \item 水稻 $x_2$, 与杂草竞争, 被害虫捕食
-            \item 蟹 $x_3$, 捕食杂草与害虫
-            \item 害虫 $x_4$, 啃食水稻
-            \item 鸟 $x_5$, 捕食蟹
+            \item 杂草 $x_1$, 与水稻竞争, 被蟹捕食;
+            \item 水稻 $x_2$, 与杂草竞争, 被害虫捕食;
+            \item 蟹 $x_3$, 捕食杂草与害虫, 被鸟捕食;
+            \item 害虫 $x_4$, 捕食水稻, 被蟹捕食;
+            \item 鸟 $x_5$, 捕食蟹.
         \end{itemize}
+        提示: 水稻对蟹有遮蔽作用,被捕食减少.
 
         \column{0.5\textwidth}
-        提示
-        \begin{itemize}
-            \item 水稻对蟹有遮蔽作用,被捕食减少
-        \end{itemize}
+        \begin{equation*}
+            \boldsymbol{\alpha} :=
+            \begin{bmatrix}
+                1 & 1 & 0 & 0 & 0 \\
+                1 & 1 & 0 & 0 & 0 \\
+                0 & 0 & 1 & 0 & 0 \\
+                0 & 0 & 0 & 1 & 0 \\
+                0 & 0 & 0 & 0 & 1
+            \end{bmatrix},
+        \end{equation*}
+        \begin{equation*}
+            \boldsymbol{\beta} :=
+            \begin{bmatrix}
+                0 & 0 & -8 &  0 &  0 \\
+                0 & 0 &  0 & -2 &  0 \\
+                6 & 0 &  0 &  5 & -1 \\
+                0 & 8 & -6 &  0 &  0 \\
+                0 & 0 &  2 &  0 &  0
+            \end{bmatrix} \cdot 10^{-4}.
+        \end{equation*}
     \end{columns}
+\end{frame}
+
+\begin{frame}{ddd}
+    \begin{figure}[h]
+        \centering
+        \includegraphics{./figures/rice-crab.pdf}
+        \caption{实例: 稻蟹共生}
+        \label{fig:rice-crab}
+    \end{figure}
 \end{frame}
 
 \section{结论与展望}

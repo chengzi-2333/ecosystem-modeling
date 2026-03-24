@@ -5,7 +5,7 @@
 % layout
 \usepackage{abstract}
 \usepackage{fancyhdr}
-\usepackage{flushend}
+% \usepackage{flushend}
 \usepackage[scale=0.8]{geometry}
 % content
 \usepackage{authblk}
@@ -290,7 +290,9 @@ $\boldsymbol{\beta} = \left[
     \frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (1 - \frac{1}{k_i} \sum_{j} \alpha_{i,j} x_j) (r_i + \sum_{j} \beta_{i,j} x_j).
 \end{equation}
 注意到\cref{eq:general:part}中$\frac{1}{k_i}$为常数,
-可移入求和符号,并入交互系数$\alpha_{i,j}$,以简化表达式,
+可移入求和符号,并入交互系数$\alpha_{i,j}$,
+将交互系数$\alpha_{i,j}$重新定义为\strong{种群占环境容纳量的比例},
+以简化表达式.
 故\cref{eq:general:part}可写为
 \begin{equation}
     \frac{\mathrm{d} x_i}{\mathrm{d} t} = x_i (1 - \sum_{j} \alpha_{i,j} x_j) (r_i + \sum_{j} \beta_{i,j} x_j).
@@ -361,13 +363,9 @@ $\boldsymbol{\beta} = \left[
         0.001 & 0
     \end{smallmatrix}
 \right]$,
-$X \sim N(0, 3^2)$
+$X \sim N(0, 1)$
 时方程的解.
-可以看到,
-$x_1$与$x_2$大致稳定在$40$与$30$,且具有随机波动,
-较为准确地刻画了现实中生态系统的种群变化.
 
-% TODO: 实例分析
 \section{实例分析} \label{sec:example}
 本章节中,我们将基于通用模型,结合具体实例进行分析.
 
@@ -383,79 +381,116 @@ $x_1$与$x_2$大致稳定在$40$与$30$,且具有随机波动,
 
 本节将以稻蟹共生为例,使用通用模型预测种群演化.
 
-\subsubsection{模型构建}
-在本例中,我们引入杂草、水稻、蟹、害虫、鸟类(蟹的天敌),
-分别表示为$x_1$到$x_5$,组成生态系统.
-其中,蟹捕食杂草与害虫,害虫啃食水稻,而鸟类捕食蟹.
+\subsubsection{生态系统组成}
+本例的生态系统组成如下:
+\begin{itemize}
+    \item 杂草 $x_1$, 与水稻竞争, 被蟹捕食;
+    \item 水稻 $x_2$, 与杂草竞争, 被害虫捕食;
+    \item 蟹 $x_3$, 捕食杂草与害虫, 被鸟捕食;
+    \item 害虫 $x_4$, 捕食水稻, 被蟹捕食;
+    \item 鸟 $x_5$, 捕食蟹.
+\end{itemize}
+其中,由于水稻的遮蔽作用,蟹被捕食的概率明显低于自然水平.
 
-% TODO: 修改结语部分
+\subsubsection{参数构建} \label{sec:example:rice-crab:args}
+综合考察种群间的捕食及竞争关系,可构建增长率向量$\mathbf{r}$
+与交互矩阵$\boldsymbol{\alpha}$, $\boldsymbol{\beta}$
+\begin{equation*}
+    \mathbf{x_0} :=
+    \begin{bmatrix}
+        1436 & 1547 & 874 & 1296 & 355
+    \end{bmatrix}^\top,
+\end{equation*}
+\begin{equation*}
+    \mathbf{r} :=
+    \begin{bmatrix}
+        1.2 & 1 & -0.6 & -0.9 & -0.3
+    \end{bmatrix}^\top,
+\end{equation*}
+\begin{equation*}
+    \boldsymbol{\alpha} :=
+    \begin{bmatrix}
+        1 & 1 & 0 & 0 & 0 \\
+        1 & 1 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0 & 0 \\
+        0 & 0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & 0 & 1
+    \end{bmatrix},
+\end{equation*}
+\begin{equation*}
+    \boldsymbol{\beta} :=
+    \begin{bmatrix}
+        0 & 0 & -8 &  0 &  0 \\
+        0 & 0 &  0 & -2 &  0 \\
+        6 & 0 &  0 &  5 & -1 \\
+        0 & 8 & -6 &  0 &  0 \\
+        0 & 0 &  2 &  0 &  0
+    \end{bmatrix} \cdot 10^{-4}.
+\end{equation*}
+
+由于模型中仅有杂草与水稻间具有竞争关系,
+所以$\boldsymbol{\alpha}$中除对角线元素$\alpha_{i,i}$外,
+仅$\alpha_{1,2}$与$\alpha_{2,1}$存在数值,其余非对角线元素为$0$,
+体现了种群占环境容纳量的比例.
+
+对于$\boldsymbol{\beta}$,由于捕食关系同时作用于两个物种,
+故矩阵中涉及种间竞争的元素总是关于对角线成对出现.
+
+\subsubsection{实例运行}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{./figures/rice-crab.pdf}
+    \caption{实例: 稻蟹共生}
+    \label{fig:rice-crab}
+\end{figure}
+\cref{fig:rice-crab}中显示了一组针对\cref{sec:example:rice-crab:args}中参数的解.
+可以看到,该参数下各种群数量趋于稳定波动.
+
 \section{结论与展望}
 
 \subsection{结论}
+
+\subsubsection{模型意义}
 基于\cref{sec:example}\nameref*{sec:example}的结果,
-我们认为通用模型具有一定准确性
+我们认为,通用模型通过引入多种种间关系,
+较为准确地描述\strong{一定条件下}生态系统中的种群演化,
+为进一步分析提供基础.
 
 \subsubsection{局限性}
-与此同时,通用模型存在局限性.
+与此同时,通用模型存在局限性:
 \begin{itemize}
     \item \strong{未考虑人为因素}\space
         对于农田生态系统,人是该生态系统中极为重要的一环,
-        人对该生态系统的介入
-    \item \strong{强线性关系}\space
-        模型中令$\alpha_{i,j}$与$x_i$相乘并求和,
+        其对生态系统的介入为生态系统演化的重要变量.
+        鉴于其复杂性,通用模型中暂未引入.
+    \item \strong{种群迁徙}\space
+        模型假设生态系统是\strong{封闭}的,即无种群迁入迁出.
+        对于农田生态系统,这种假设可能不会造成实质影响,
+        但种群迁徙为动物界常见现象,
+        在接受该假设时,通用模型便失去其普适性.
     \item \strong{未体现长期影响}\space
-        在模型的假设中,内禀增长率与交互系数为常数.
-        这种假设在短期内不会出现太大偏差.
+        模型的假设内禀增长率与交互系数为常数.
+        这种假设于短期内不会出现太大偏差.
         然而,长期影响下的种间关系可能会发生变化,
         从而导致交互系数改变.
 \end{itemize}
+上述问题亟待深入研究后进一步解决.
 
 \subsection{展望}
-数学建模作为现实生活中的重要工具,
-使用简洁的语言描述事物及其演化.
-在作物产量的任务中,
-尤其是从理论模型到实际应用的场景,
-我们仍然面临诸多挑战.
+正如统计学家 George Box 所言\autocite{box-statistics}:
+\begin{quote}
+    “所有模型都是错的，但有些是有用的\footnote{后半句为原句引申}”.
+\end{quote}
+建立模型的意义在于使用简单结构描述复杂对象,
+故模型仅为现实的\strong{简化}与\strong{近似},
+没有任何模型能够做到完全精准,其拟合效果最终需由实践检验;
+但若审慎运用,即使简单模型仍能提供宝贵洞见.
 
-\begin{itemize}
-    \item \strong{预见性}\space
-        原始的农业生产在有限的经验下,
-        需要克服不确定的气候、资源等因素,才能提升产量.
-        计算机的模拟可以使经验判断成为定量计算.
-        值得注意的是,这种预见性并不要求模型的绝对准确.
-        复杂计算机模型的校准需要明确处理结构的误差——意识到模型只是对现实的近似,
-        结果本身包含一定误差,这对决策者而言也是非常重要的信息.
+本次研究中,我们初步学习了基本生态学模型,领略生态学模型的要义,
+并在此基础上建立简单模型,粗略描述生态系统演化,其学习效果显著.
 
-    \item \strong{优化性}\space
-        如上文所述,模型只是对现实的近似.
-        显而易见,模型越逼近现实,其实用价值越高.
-        计算机模拟与优化算法的结合,为解决这类问题提供了可行路径.
-        优化算法可以自我改进深度优化算法,探索许多人类无法察觉的微小因素,
-        从而做出更加精准的判断.
-
-    \item \strong{普及性}\space
-        理想情况下,每一个农民都要掌握一定的气象、经济学知识,
-        能准确解读天气数据,能优化资源配置,但现实不是这样的.
-        计算机模拟在降低专业知识应用门槛方面可以发挥独特作用.
-        农民不必理解模型的内部细节,不必掌握编程技能就能获得准确可靠的数据.
-\end{itemize}
-
-模型仅是对现实的简化与近似,终究需由实践检验.
-但这种简化如果得当,
-就能帮助我们从复杂中识别简单,从噪声中辨别信号,从不确定性中锚定决策.
-这或许正是“对种群动态的数学手段模式化分析”对类似稻蟹共生场景的最根本贡献.
-
-当然,我们也要看到研究的局限性.
-从空间的角度看,如在 LV 竞争模型中,如果我们拥有一个更加广阔的充足空间,
-就需要考虑到种群的空间分布对于其数量变化的影响.
-例如大型食肉动物对小型动物的威慑作用.
-
-从社会的角度看,计算机模拟的能力仍然不足.
-例如从人类影响的程度上看,就本研究的例子而言,当我们进一步思考实际意义,
-我们需要考虑到人工对害虫的扑杀和人工施肥等因素.
-
-我们相信在不远的将来,
-计算机技术可以成熟的被运用到实际生产生活当中,让人类的生活更加美好.
+我们相信,数学建模将继续在各领域发挥重要作用,
+为认识与创造提供支持,推动科学技术的进步.
 
 \printbibliography[title=参考文献]
 
